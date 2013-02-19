@@ -34,12 +34,18 @@ class TagsWrapper(object):
             return self.__general_tag_handler__(key)
 
     def save(self):
+        """Save changes to the file."""
         return self.raw_tags.save()
 
     def reload(self):
+        """Reload tags from the file."""
         self._init()
 
     def pprint(self, raw=False):
+        """Print formatted representation of tags.
+        if *raw* is *True*, use keys and values from the
+        underlying mutagen object.
+        """
         print self.filename
         tags = self if not raw else self.raw_tags
         for k in sorted(tags.iterkeys()):
