@@ -1,9 +1,20 @@
 import os
+import re
 import sys
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 
-from mutagenwrapper import version
+
+__dir__ = os.path.dirname(__file__)
+
+
+# Parse version since we can't import the package
+# due to dependency on mutagen
+def getversion():
+    with open(os.path.join(__dir__, 'mutagenwrapper', 'version.py')) as f:
+        text = f.read()
+        m = re.match("^__version__ = '(.*)'$", text)
+        return m.group(1)
 
 
 # Utility function to read the README file.
@@ -11,7 +22,7 @@ from mutagenwrapper import version
 # README file and 2) it"s easier to type in the README file than to put a raw
 # string in below ...
 def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+    return open(os.path.join(__dir__, fname)).read()
 
 
 class PyTest(TestCommand):
@@ -30,7 +41,7 @@ class PyTest(TestCommand):
 
 setup(
     name = "mutagenwrapper",
-    version = version,
+    version = getversion(),
     author = "Choongmin Lee",
     author_email = "choongmin@me.com",
     description = "A wrapper for mutagen that uses consistent keys among various tagging formats",

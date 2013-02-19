@@ -1,11 +1,9 @@
 from .exceptions import MutagenWrapperError, ConflictError
+from .version import __version__ as version
 from ._wrappers import TagsWrapper
 from ._flac import FLACTagsWrapper
 from ._mp4 import MP4TagsWrapper
 from ._mp3 import MP3TagsWrapper
-
-
-version = '0.0.1'
 
 
 def open_tags(name, raw=False):
