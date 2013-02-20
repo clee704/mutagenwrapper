@@ -1,7 +1,7 @@
 from mutagen.flac import FLAC
 
 from ._wrappers import TagsWrapper
-from ._common import TagHandler, TextTagHandler
+from ._handlers import TagHandler, TextTagHandler
 
 
 class FLACPictureTagHandler(TagHandler):

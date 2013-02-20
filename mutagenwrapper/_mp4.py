@@ -1,7 +1,7 @@
 from mutagen.mp4 import MP4, MP4Tags
 
-from _wrappers import FreeformTagsWrapper
-from _common import TextTagHandler, PairTagHandler
+from ._wrappers import FreeformTagsWrapper
+from ._handlers import TextTagHandler, PairTagHandler
 
 
 class MP4PairTagHandler(PairTagHandler):

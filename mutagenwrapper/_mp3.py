@@ -3,8 +3,8 @@ import re
 from mutagen.id3 import ID3, TextFrame
 import mutagen.id3
 
-from _wrappers import FreeformTagsWrapper
-from _common import TagHandler, TextTagHandler, PairTagHandler
+from ._wrappers import FreeformTagsWrapper
+from ._handlers import TagHandler, TextTagHandler, PairTagHandler
 
 
 class MP3PairTagHandler(PairTagHandler):
