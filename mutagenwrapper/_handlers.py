@@ -9,7 +9,7 @@ class TagHandler(object):
     def set(self, tags, value):
         raise NotImplementedError()
 
-    def del_(self, tags):
+    def delete(self, tags):
         raise NotImplementedError()
 
 
@@ -21,7 +21,7 @@ class SimpleTagHandler(TagHandler):
     def set(self, tags, value):
         tags[self.original_key] = value
 
-    def del_(self, tags):
+    def delete(self, tags):
         del tags[self.original_key]
 
 

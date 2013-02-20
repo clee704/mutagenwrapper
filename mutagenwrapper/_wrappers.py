@@ -68,7 +68,7 @@ class TagsWrapper(object):
         self._get_handler(key).set(self.raw_tags, value)
 
     def __delitem__(self, key):
-        self._get_handler(key).del_(self.raw_tags)
+        self._get_handler(key).delete(self.raw_tags)
 
     def __contains__(self, key):
         return key in self.keys()
