@@ -83,10 +83,11 @@ tags can be used.
 
 Custom tags (starting with ``TXXX:`` for ID3 and ``----:com.apple.iTunes:``
 for MP4) have their name as the key without prefix and lowercased, e.g.
-``TXXX:CUSTOM`` and ``----:com.apple.iTunes:CUSTOM`` are mapped to *custom*.
+both ``TXXX:CUSTOM`` and ``----:com.apple.iTunes:CUSTOM`` are mapped to
+*custom*.
 
 Currently you cannot change values for pictures, tracknumber, tracktotal,
-discknumber, discktotal.
+discnumber, and disctotal.
 
 +-----------------+-------+------------+
 | Name            | ID3v2 | iTunes MP4 |
