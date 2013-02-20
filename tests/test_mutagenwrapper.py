@@ -39,13 +39,13 @@ def cover():
     return read('data/cover.jpg')
 
 
-@pytest.fixture(params=['m4a'])
+@pytest.fixture(params=['m4a', 'mp3'])
 def conflict_tags(tmpdir, request):
     with pytest.raises(mutagenwrapper.ConflictError):
         open_tags(tmpdir, 'data/conflict.{0}'.format(request.param))
 
 
-@pytest.fixture(params=['m4a'])
+@pytest.fixture(params=['m4a', 'mp3'])
 def multiframe_tags(tmpdir, request):
     return open_tags(tmpdir, 'data/multiframe.{0}'.format(request.param))
 
