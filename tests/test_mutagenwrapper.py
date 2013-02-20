@@ -36,8 +36,7 @@ def tags(tmpdir, request):
 
 @pytest.fixture
 def cover():
-    with open('data/cover.jpg') as f:
-        return f.read()
+    return read('data/cover.jpg')
 
 
 @pytest.fixture(params=['m4a'])
