@@ -132,7 +132,7 @@ class FreeformTagsWrapper(TagsWrapper):
             m = re.match(self.__freeform_pattern__, original_key)
             if not m:
                 continue
-            key = m.group(1).lower()
+            key = str(m.group(1).lower())
             keymap.setdefault(original_key, []).append(key)
             if key in handlers:
                 raise ConflictError('Both {0} and {1} mapped to the same key {2}'.format(original_key, handlers[key].original_key, key))

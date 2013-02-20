@@ -66,6 +66,10 @@ class TestTagsWrapper(object):
             keys.append(k)
         assert sorted(keys) == sorted(tags.keys())
 
+    def test_key_type(self, tags):
+        for k in tags:
+            assert not isinstance(k, unicode)
+
     def test_get_picture(self, tags, cover):
         assert tags['pictures'] == [cover]
 
