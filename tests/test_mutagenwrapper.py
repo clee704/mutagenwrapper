@@ -10,11 +10,9 @@ sys.path.insert(0, os.path.join(__dir__, '..'))
 import mutagenwrapper
 
 
-os.chdir(__dir__)
-
-
 _read_memoize = {}
 def read(name):
+    os.chdir(__dir__)
     if name in _read_memoize:
         return _read_memoize[name]
     with open(name) as f:
