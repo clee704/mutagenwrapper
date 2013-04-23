@@ -10,9 +10,9 @@ class TagsWrapper(object):
 
     Note that the implementation is rather inefficient. It iterates
     the internal keys and convert them everytime :meth:`iterkeys`
-    is called. Since many methods rely on that method, it could be slow
-    the performance especially when there are many inclusion tests using
-    :meth:`__contains__`.
+    is called. Since many methods rely on that method, it could be
+    a problem especially when there are many inclusion tests using
+    :meth:`__contains__` (e.g. ``'artist' in mywrapper``)
 
     .. attribute:: filename
 
