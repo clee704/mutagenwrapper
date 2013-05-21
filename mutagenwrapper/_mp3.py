@@ -100,6 +100,7 @@ class MP3TagsWrapper(FreeformTagsWrapper):
         'titlesort':       MP3TextTagHandler('TSOT'),
         'tracknumber':     MP3PairTagHandler('TRCK', 0),
         'tracktotal':      MP3PairTagHandler('TRCK', 1),
+        'lyrics':          MP3TextTagHandler('TEXT'),
     }
     __freeform_pattern__ = '^TXXX:(.*)$'
     __freeform_format__ = 'TXXX:{0}'
