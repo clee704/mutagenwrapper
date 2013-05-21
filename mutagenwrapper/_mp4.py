@@ -70,6 +70,7 @@ class MP4TagsWrapper(FreeformTagsWrapper):
         'titlesort':       TextTagHandler('sonm'),
         'tracknumber':     MP4PairTagHandler('trkn', 0),
         'tracktotal':      MP4PairTagHandler('trkn', 1),
+        'lyrics':          TextTagHandler('\xa9lyr'),
     }
     __freeform_pattern__ = '^----:com.apple.iTunes:(.*)$'
     __freeform_format__ = '----:com.apple.iTunes:{0}'

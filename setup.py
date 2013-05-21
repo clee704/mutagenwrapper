@@ -49,7 +49,9 @@ setup(
     license = "MIT License",
     url = "https://github.com/clee704/mutagenwrapper",
     packages = find_packages(),
-    install_requires = ["mutagen >= 1.2.1"],
+    install_requires = [
+        "mutagen == 1.21"
+    ],
     long_description = read("README.rst"),
     classifiers = [
         # Full list is here: http://pypi.python.org/pypi?%3Aaction=list_classifiers
