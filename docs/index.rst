@@ -34,13 +34,13 @@ Examples
 You can access tags via human-readable names. For the mappings between these
 names and the actual, internal tag names, see `Mappings`_::
 
-    >>> from mutagenwrapper import open_tags
-    >>> mp3 = open_tags('test.mp3')
+    >>> from mutagenwrapper import read_tags
+    >>> mp3 = read_tags('test.mp3')
     >>> mp3['artist']
     [u'Holst, Gustav (1874-1934)']
     >>> mp3['album']
     [u'The Planets']
-    >>> mp4 = open_tags('test.m4a')
+    >>> mp4 = read_tags('test.m4a')
     >>> mp4['artist']
     [u'Holst, Gustav (1874-1934)']
     >>> mp4['album']
