@@ -1,10 +1,2 @@
-include Makefile LICENSE README.rst requirements.txt
-recursive-include docs *
+include README.rst LICENSE Makefile requirements.txt
 recursive-include tests *
-recursive-exclude docs *.pyc
-recursive-exclude docs *.pyo
-recursive-exclude tests *.pyc
-recursive-exclude tests *.pyo
-recursive-exclude * *.swp
-prune docs/_build
-prune docs/_themes/.git

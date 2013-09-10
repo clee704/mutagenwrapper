@@ -20,15 +20,15 @@ def read(name):
         return rv
 
 
-def open_tags(tmpdir, name):
+def read_tags(tmpdir, name):
     p = tmpdir.join(os.path.basename(name))
     p.write(read(name), 'wb')
-    return mutagenwrapper.open_tags(p.strpath)
+    return mutagenwrapper.read_tags(p.strpath)
 
 
 @pytest.fixture(params=['flac', 'm4a', 'mp3'])
 def tags(tmpdir, request):
-    return open_tags(tmpdir, 'data/silence.{0}'.format(request.param))
+    return read_tags(tmpdir, 'data/silence.{0}'.format(request.param))
 
 
 @pytest.fixture
@@ -39,12 +39,12 @@ def cover():
 @pytest.fixture(params=['m4a', 'mp3'])
 def conflict_tags(tmpdir, request):
     with pytest.raises(mutagenwrapper.ConflictError):
-        open_tags(tmpdir, 'data/conflict.{0}'.format(request.param))
+        read_tags(tmpdir, 'data/conflict.{0}'.format(request.param))
 
 
 @pytest.fixture(params=['m4a', 'mp3'])
 def multiframe_tags(tmpdir, request):
-    return open_tags(tmpdir, 'data/multiframe.{0}'.format(request.param))
+    return read_tags(tmpdir, 'data/multiframe.{0}'.format(request.param))
 
 
 class TestTagsWrapper(object):
