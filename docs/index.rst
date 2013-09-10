@@ -6,8 +6,8 @@
 Welcome to mutagenwrapper's documentation!
 ==========================================
 
-mutagenwrapper is a wrapper for mutagen_ that uses consistent and human-readable
-tag names among various tagging formats. The idea comes from foobar2000_, which
+mutagenwrapper is a wrapper for mutagen_ that normalizes tags between various
+audio file formats. The normalization is done as in foobar2000_, which
 supports seamless tag management of various audio file formats.
 
 Note that this module is still in its early development stage. Many features are

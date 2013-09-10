@@ -25,7 +25,7 @@ def getversion():
 setup(
     name = "mutagenwrapper",
     version = getversion(),
-    description = "A wrapper for mutagen that uses consistent keys among various tagging formats",
+    description = "wrapper for mutagen that normalizes tags between various audio file formats",
     long_description = open("README.rst").read(),
     author = "Choongmin Lee",
     author_email = "choongmin@me.com",
