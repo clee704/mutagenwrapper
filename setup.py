@@ -7,31 +7,31 @@ try:
 except ImportError:
     from distutils.core import setup
 
-packages = [
-    'mutagenwrapper',
-]
-
-requiers = [
-    "mutagen == 1.21",
-]
-
-# Parse version since we can't import the package due to dependency on mutagen
 def getversion():
     with open('mutagenwrapper/version.py') as f:
         text = f.read()
         m = re.match("^__version__ = '(.*)'$", text)
         return m.group(1)
 
+def readme():
+    try:
+        with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as f:
+            return f.read()
+    except Exception:
+        return ''
+
 setup(
     name = "mutagenwrapper",
     version = getversion(),
     description = "wrapper for mutagen that normalizes tags between various audio file formats",
-    long_description = open("README.rst").read(),
+    long_description = readme(),
     author = "Choongmin Lee",
     author_email = "choongmin@me.com",
     url = "https://github.com/clee704/mutagenwrapper",
-    packages = packages,
-    install_requires = requiers,
+    packages = ['mutagenwrapper'],
+    install_requires = [
+        'mutagen == 1.21',
+    ],
     license = "MIT License",
     keywords = "audio metadata tags",
     classifiers = [
