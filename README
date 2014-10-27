@@ -1,0 +1,24 @@
+mutagenwrapper is a thin wrapper for mutagen, providing a unified interface for
+various tagging formats.
+
+Install with pip:
+
+    $ pip install mutagenwrapper
+
+Read the tags using the same names for different formats:
+
+    >>> from mutagenwrapper import MediaFile
+    >>> mp3 = MediaFile('Holst/The Planets/01 Mars, the Bringer of War.mp3')
+    >>> mp3.artist
+    u'Gustav Holst'
+    >>> mp3.album
+    u'The Planets'
+    >>> mp4 = MediaFile('Daft Punk/Random Access Memories/13 Contact.m4a')
+    >>> mp4.artist
+    u'Daft Punk'
+    >>> mp4.album
+    u'Random Access Memories'
+
+Currently, MP3, FLAC, MP4 files are supported.
+
+For more information, read the documentation at https://mutagenwrapper.readthedocs.org.

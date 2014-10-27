@@ -1,169 +1,114 @@
-# -*- coding: UTF-8 -*-
-import os
-import sys
-
+# -*- coding: utf-8 -*-
 import pytest
 
-__dir__ = os.path.dirname(__file__)
-sys.path.insert(0, os.path.join(__dir__, '..'))
-import mutagenwrapper
+from mutagenwrapper import MediaFile, ReservedTagNameError
 
 
-_read_memoize = {}
-def read(name):
-    os.chdir(__dir__)
-    if name in _read_memoize:
-        return _read_memoize[name]
-    with open(name) as f:
-        rv = f.read()
-        _read_memoize[name] = rv
-        return rv
+basic_ref = {
+    'artist': 'Daft Punk',
+    'title': 'Get Lucky',
+    'album': 'Random Access Memories',
+    'date': '2013',
+    'genre': 'Electronic',
+    'composer': 'Guy-Manuel de Homem-Christo, Nile Rodgers, Pharrell Williams, Thomas Bangalter',
+    'tracknumber': 8,
+    'tracktotal': 13,
+    'discnumber': 1,
+    'disctotal': 1,
+}
 
 
-def read_tags(tmpdir, name):
-    p = tmpdir.join(os.path.basename(name))
-    p.write(read(name), 'wb')
-    return mutagenwrapper.read_tags(p.strpath)
+def test_basic_read(path_basic):
+    m = MediaFile(path_basic)
+    assert m.artist == basic_ref['artist']
+    assert m['artist'] == basic_ref['artist']
+    for k in sorted(basic_ref.iterkeys()):
+        assert getattr(m, k) == basic_ref[k]
+        assert m[k] == basic_ref[k]
 
 
-@pytest.fixture(params=['flac', 'm4a', 'mp3'])
-def tags(tmpdir, request):
-    return read_tags(tmpdir, 'data/silence.{0}'.format(request.param))
+def test_basic_write(path_basic, tempcopy):
+    with tempcopy(path_basic) as tf:
+        m = MediaFile(tf.name)
+        assert m.artist == basic_ref['artist']
+
+        m.artist = 'DAFT PUNK'
+        assert m.artist == 'DAFT PUNK'
+        m.save(reload=True)
+        assert m.artist == 'DAFT PUNK'
+
+        m.album = ['Foo', 'Bar']
+        assert m.album == ['Foo', 'Bar']
+        m.save(reload=True)
+        assert m.album == ['Foo', 'Bar']
+
+        # XXX Appending values are NOT supported (e.g. m.album.append(...))
+        # and should not used (behaviors vary for different formats,
+        # or even different tags in the same format).
+
+        m.date = '2014-08-15'
+        assert m.date == '2014-08-15'
+        m.save(reload=True)
+        assert m.date == '2014-08-15'
+
+        m.tracknumber = 1
+        assert m.tracknumber == 1
+        assert m.tracktotal == 13
+        m.save(reload=True)
+        assert m.tracknumber == 1
+        assert m.tracktotal == 13
+
+        del m.artist
+        assert m.artist is None
+        m.save(reload=True)
+        assert m.artist is None
+
+        del m.date
+        assert m.date is None
+        m.save(reload=True)
+        assert m.date is None
+
+        del m.tracknumber
+        assert m.tracknumber is None
+        m.save(reload=True)
+        assert m.tracknumber is None
+
+        m.tracknumber = 9
+        assert m.tracknumber == 9
+        m.save(reload=True)
+        assert m.tracknumber == 9
+
+        m.tracktotal = 42
+        assert m.tracknumber == 9
+        assert m.tracktotal == 42
+        m.save(reload=True)
+        assert m.tracknumber == 9
+        assert m.tracktotal == 42
 
 
-@pytest.fixture
-def cover():
-    return read('data/cover.jpg')
+def test_basic_write_reserved(path_basic, tempcopy):
+    with tempcopy(path_basic) as tf:
+        m = MediaFile(tf.name)
+        if m.wrapper.__class__.__name__ == 'ID3TagsWrapper':
+            # conductor is a regular tag in ID3
+            return
+        with pytest.raises(ReservedTagNameError):
+            m.___conductor = 'Abbado'
 
 
-@pytest.fixture(params=['m4a', 'mp3'])
-def conflict_tags(tmpdir, request):
-    with pytest.raises(mutagenwrapper.ConflictError):
-        read_tags(tmpdir, 'data/conflict.{0}'.format(request.param))
+def test_basic_write_unicode(path_basic, tempcopy):
+    with tempcopy(path_basic) as tf:
+        m = MediaFile(tf.name)
+
+        m.artist = u'Frédéric François Chopin'
+        m.save(reload=True)
+        assert m.artist == u'Frédéric François Chopin'
+
+        m.album = [u'Études', u'Klavierstück']
+        m.save(reload=True)
+        assert m.album == [u'Études', u'Klavierstück']
 
 
-@pytest.fixture(params=['m4a', 'mp3'])
-def multiframe_tags(tmpdir, request):
-    return read_tags(tmpdir, 'data/multiframe.{0}'.format(request.param))
-
-
-class TestTagsWrapper(object):
-
-    def test_reload(self, tags):
-        tags['title'] = 'Temporary Title'
-        del tags['composer']
-        tags.reload()
-        assert tags['title'] != 'Temporary Title'
-        assert 'composer' in tags
-
-    def test_iter(self, tags):
-        keys = []
-        for k in tags:
-            keys.append(k)
-        assert sorted(keys) == sorted(tags.keys())
-
-    def test_key_type(self, tags):
-        for k in tags:
-            assert not isinstance(k, unicode)
-
-    def test_get_picture(self, tags, cover):
-        assert tags['pictures'] == [cover]
-
-    def test_get_text(self, tags):
-        assert tags['title'] == [u'Hello, world!']
-
-    def test_get_text_many(self, tags):
-        assert tags['composer'] == [u'Bach', u'Beethoven']
-
-    def test_get_text_freeform(self, tags):
-        assert tags['freeform'] == [u'Freeform Text']
-
-    def test_get_text_freeform_many(self, tags):
-        assert tags['colors'] == [u'red', u'blue', u'green']
-
-    def test_get_text_tuple(self, tags):
-        assert tags['tracknumber'] == [u'1', u'2']
-
-    def test_get_text_unicode(self, tags):
-        assert tags['uni'] == [u'Frédéric Chopin']
-
-    def test_find_text(self, tags):
-        assert tags.find('title') == u'Hello, world!'
-
-    def test_find_text_many(self, tags):
-        with pytest.raises(KeyError):
-            tags.find('composer')
-
-    def test_find_text_not_present(self, tags):
-        assert tags.find('abcdef', 'default') == 'default'
-
-    def test_set_text(self, tags):
-        tags['title'] = 'New Title'
-        tags.save()
-        tags.reload()
-        assert tags['title'] == [u'New Title']
-
-    def test_set_text_overwrite(self, tags):
-        tags['title'] = 'New Title'
-        tags.save()
-        tags.reload()
-        assert tags['title'] == [u'New Title']
-
-        tags['title'] = 'New Title 2'
-        tags.save()
-        tags.reload()
-        assert tags['title'] == [u'New Title 2']
-
-    def test_set_text_unicode(self, tags):
-        tags['title'] = u"12 Études d'exécution transcendante"
-        tags.save()
-        tags.reload()
-        assert tags['title'] == [u"12 Études d'exécution transcendante"]
-
-    def test_set_text_many(self, tags):
-        tags['composer'] = ['Shostakovich', 'Khachaturian', 'Puccini']
-        tags.save()
-        tags.reload()
-        assert tags['composer'] == [u'Shostakovich', u'Khachaturian', u'Puccini']
-
-    def test_set_text_new(self, tags):
-        tags['date'] = '1928'
-        tags.save()
-        tags.reload()
-        assert tags['date'] == [u'1928']
-
-    def test_set_text_freeform(self, tags):
-        tags['hello'] = ['world']
-        tags.save()
-        tags.reload()
-        assert tags['hello'] == [u'world']
-
-    def test_set_text_many_freeform(self, tags):
-        tags['foo'] = ['x', 'y', 'z']
-        tags.save()
-        tags.reload()
-        assert tags['foo'] == [u'x', u'y', u'z']
-
-    def test_set_text_unicode_freeform(self, tags):
-        tags['foo'] = [u'x', u'y', u'z']
-        tags.save()
-        tags.reload()
-        assert tags['foo'] == [u'x', u'y', u'z']
-
-    def test_set_text_overwrite(self, tags):
-        tags['freeform'] = ['world']
-        tags.save()
-        tags.reload()
-        assert tags['freeform'] == [u'world']
-
-    def test_del_text(self, tags):
-        del tags['title']
-        tags.save()
-        tags.reload()
-        assert 'title' not in tags
-
-    def test_conflict(self, conflict_tags):
-        pass
-
-    def test_multiframe(self, multiframe_tags):
-        assert multiframe_tags['performer'] == [u'performer1', u'performer2']
+def test_basic_read_picture(path_basic):
+    m = MediaFile(path_basic)
+    #assert m.picture == ''
