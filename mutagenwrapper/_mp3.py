@@ -1,7 +1,8 @@
 import re
 
-from mutagen.id3 import ID3, TextFrame
-import mutagen.id3
+from mutagen.mp3 import MP3
+from mutagen.id3 import TextFrame
+import mutagen.mp3
 
 from ._wrappers import FreeformTagsWrapper
 from ._handlers import TagHandler, TextTagHandler, PairTagHandler
@@ -66,7 +67,7 @@ class MP3FreeformTagHandler(MP3TextTagHandler):
             tags[self.original_key].text = value
 
 
-class ID3Hack(ID3):
+class ID3Hack(MP3):
 
     def loaded_frame(self, tag):
         key = tag.HashKey
