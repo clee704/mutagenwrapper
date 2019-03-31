@@ -3,7 +3,7 @@ from codecs import open
 from os import path
 
 here = path.abspath(path.dirname(__file__))
-execfile(path.join(here, 'mutagenwrapper/version.py'))  # import __version__
+exec(open(path.join(here, 'mutagenwrapper/version.py')).read())  # import __version__
 
 def readme():
     try:
