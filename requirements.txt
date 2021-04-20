@@ -7,6 +7,6 @@ docutils==0.12
 ipython==2.2.0
 mutagen==1.24
 pep8==1.5.7
-py==1.4.25
+py==1.10.0
 pytest==2.6.3
 wsgiref==0.1.2
